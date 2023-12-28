@@ -1,5 +1,7 @@
+bcrypt
 Flask
 Flask-cors
+psycopg2
 python-dotenv
 requests
 uwsgi

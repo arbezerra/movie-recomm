@@ -2,9 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from recommender import Recommender
 
-from dotenv import load_dotenv
-load_dotenv()
-
 cors = CORS()
 recommender = Recommender()
 
