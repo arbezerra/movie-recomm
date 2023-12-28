@@ -1,0 +1,6 @@
+Flask
+Flask-cors
+python-dotenv
+requests
+uwsgi
+
