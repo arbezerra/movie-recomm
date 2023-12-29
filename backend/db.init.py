@@ -111,7 +111,7 @@ else:
             "(%s,%s,%s)", (
                 f"User {i}",
                 f"user{i}@example.com",
-                bcrypt.hashpw("123".encode('utf-8'), bcrypt.gensalt()),
+                bcrypt.hashpw("123".encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
             )).decode('utf8')
             for i in range(1, 11))
     )

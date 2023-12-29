@@ -2,6 +2,7 @@ bcrypt
 Flask
 Flask-cors
 psycopg2
+pyjwt
 python-dotenv
 requests
 uwsgi

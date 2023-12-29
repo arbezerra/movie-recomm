@@ -12,6 +12,5 @@ class API:
 
     def get(self, uri):
         response = requests.get(self.URL + uri, headers=self.headers)
-        print(response.encoding)
         result = response.json()
         return result
