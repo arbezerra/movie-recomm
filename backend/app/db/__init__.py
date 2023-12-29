@@ -26,5 +26,4 @@ def connect():
         user=config.DB_USER,
         password=config.DB_PASS,
     )
-    # conn.set_client_encoding('UTF8')
     return conn
