@@ -1,8 +1,8 @@
 import bcrypt
 import psycopg2
 import random
-import config
-from api import API
+from app import config
+from app.api.tmdb import API
 
 api = API()
 
