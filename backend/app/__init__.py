@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from app.recommender import Recommender
+from .routes import routes
 
 
 cors = CORS()
@@ -11,6 +12,7 @@ def create_app():
     app = Flask(__name__)
 
     app.config.from_pyfile('config/__init__.py')
+    app.json.ensure_ascii = False
 
     cors.init_app(app)
 
@@ -22,5 +24,7 @@ def create_app():
     def recomm():
         state = request.json.get('state')
         return jsonify({"products": recommender.recommend(state)})
+
+    app.register_blueprint(routes)
 
     return app

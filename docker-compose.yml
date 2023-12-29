@@ -10,6 +10,16 @@ services:
     depends_on:
       db:
         condition: service_healthy
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@example.com"
+      PGADMIN_DEFAULT_PASSWORD: "secret"
+    ports:
+      - "8080:80"
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: postgres:16
     volumes:
