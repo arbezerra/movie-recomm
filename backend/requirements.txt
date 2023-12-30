@@ -3,6 +3,7 @@ Flask
 Flask-cors
 psycopg2
 pyjwt
+pytest
 python-dotenv
 requests
 uwsgi

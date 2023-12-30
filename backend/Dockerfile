@@ -8,11 +8,12 @@ RUN apk add --virtual .build-dependencies \
             linux-headers \
             pcre-dev \
             libpq-dev
-RUN pip install --upgrade pip
 
 COPY ./requirements.txt /app/requirements.txt
 RUN python3 -m venv /app/venv
 ENV PATH=/app/venv/bin:$PATH
+
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 FROM python:3.10-alpine as runner
@@ -22,6 +23,6 @@ RUN apk add --no-cache pcre libpq
 COPY --from=builder /app /app
 COPY . .
 
-ENV PATH=/app/venv/bin:$PATH
+ENV PATH=/app/venv/bin:/app:$PATH
 ENTRYPOINT [ "./entrypoint.sh" ]
 CMD ["uwsgi", "--ini", "/app/wsgi.ini"]

@@ -1,4 +1,6 @@
 #!/bin/sh
 
-exec python3 db.init.py &
-exec "$@"
+python3 db.init.py &
+job=$!
+wait $job
+"$@"
