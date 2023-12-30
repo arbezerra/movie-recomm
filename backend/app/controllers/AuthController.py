@@ -1,7 +1,7 @@
 from flask import request
 from app import config
 from ..services import UserService
-import bcrypt
+from ..util.hash import verify
 import jwt
 import datetime
 
@@ -12,12 +12,10 @@ def login():
 
     user = UserService.by_email(email)
     print(user)
-    if not user or not bcrypt.checkpw(
-            password.encode('utf-8'),
-            user['password'].encode('utf-8')):
+    if not user or not verify(password, user['passowrd']):
         return {"msg": "User or Password do not match"}, 403
 
     return jwt.encode({
         'id': user['id'],
         "exp": datetime.datetime.now() + datetime.timedelta(minutes=30),
-        }, config.JWT_SECRET, algorithm="HS256")
+    }, config.JWT_SECRET, algorithm="HS256")
