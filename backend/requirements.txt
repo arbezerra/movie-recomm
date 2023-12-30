@@ -1,6 +1,7 @@
 bcrypt
 Flask
 Flask-cors
+pika
 psycopg2
 pyjwt
 pytest

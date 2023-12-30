@@ -1,7 +1,7 @@
 import random
 from app.api.tmdb import API
 from app import db
-from app.util.hash import hash
+from app.util import hash, queue
 
 api = API()
 
@@ -33,7 +33,24 @@ else:
         vote_average NUMERIC(2,1) NOT NULL,
         vote_count BIGINT NOT NULL,
         backdrop_path VARCHAR(255) NOT NULL,
-        poster_path VARCHAR(255) NOT NULL
+        poster_path VARCHAR(255) NOT NULL,
+        searchable TSVECTOR GENERATED ALWAYS AS (
+            to_tsvector('portuguese', title) || ' ' ||
+            to_tsvector('simple', original_title) || ' ' ||
+            to_tsvector('portuguese', overview)
+        ) STORED
+    );""")
+
+    cur.execute("""
+    CREATE INDEX movie_popularity ON movie(popularity);
+    CREATE INDEX search ON movie USING GIN(searchable);
+    """)
+
+    cur.execute("""
+    CREATE TABLE movie_map (
+        id INTEGER PRIMARY KEY REFERENCES movie(id),
+        x VARCHAR(255) NOT NULL,
+        y VARCHAR(255) NOT NULL
     );""")
 
     cur.execute("""
@@ -111,7 +128,7 @@ else:
             "(%s,%s,%s)", (
                 f"User {i}",
                 f"user{i}@example.com",
-                hash("123"),
+                hash.hash("123"),
             )).decode('utf8')
             for i in range(1, 11))
     )
@@ -135,3 +152,11 @@ else:
     conn.close()
 
     print("DB inited")
+
+
+print("Build movie_map")
+q = queue.connect()
+ch = q.channel()
+ch.queue_declare(queue='umap')
+ch.basic_publish(exchange='', routing_key='umap', body='create')
+q.close()
