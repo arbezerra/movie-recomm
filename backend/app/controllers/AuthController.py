@@ -12,7 +12,7 @@ def login():
 
     user = UserService.by_email(email)
     print(user)
-    if not user or not verify(password, user['passowrd']):
+    if not user or not verify(password, user['password']):
         return {"msg": "User or Password do not match"}, 403
 
     return jwt.encode({
