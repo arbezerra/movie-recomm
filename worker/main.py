@@ -6,6 +6,7 @@ from psycopg2.extras import DictCursor
 import pandas as pd
 import umap
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import MultiLabelBinarizer
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -25,7 +26,12 @@ db = psycopg2.connect(
 
 def get_data():
     return pd.read_sql_query(
-        "SELECT M.*, G.genre_id as genre FROM movie M JOIN movie_genre G ON G.movie_id=M.id; ",
+        """
+        SELECT
+            M.*, array_agg(DISTINCT G.genre_id) as genre
+        FROM movie M JOIN movie_genre G ON G.movie_id=M.id
+        GROUP BY M.id
+        ORDER BY M.popularity DESC;""",
         f'postgresql+psycopg2://{user}:{password}@{host}/{database}'
     )
 
@@ -33,7 +39,16 @@ def get_data():
 def tfidf(text):
     vectorizer = TfidfVectorizer()
     x = vectorizer.fit_transform(text)
-    return pd.DataFrame(x.toarray(), columns=vectorizer.get_feature_names_out())
+    return pd.DataFrame(
+        x.toarray(),
+        columns=vectorizer.get_feature_names_out()
+    )
+
+
+def one_hot(values):
+    encoder = MultiLabelBinarizer()
+    x = encoder.fit_transform(values)
+    return pd.DataFrame(x, columns=encoder.classes_)
 
 
 def process_data(data):
@@ -41,10 +56,12 @@ def process_data(data):
         'popularity',
         'vote_average',
         'vote_count',
-        'genre',
     ]]
     processed['release_date'] = data['release_date'].apply(
         lambda x:  x.toordinal())
+    processed = pd.concat(
+        [processed, one_hot(data['genre'])], axis=1
+    )
     processed = pd.concat(
         [processed, tfidf(data['title']+' '+data['overview'])], axis=1)
     return processed
