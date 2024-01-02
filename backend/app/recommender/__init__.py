@@ -29,7 +29,7 @@ class Recommender:
 
         ids = tuple(row['id']
                     for index, row in recommendations.head(10).iterrows())
-        movies = list(self.service.get_by_ids(ids))
+        movies = [dict(row) for row in self.service.get_by_ids(ids)]
         order = {val: index for index, val in enumerate(ids)}
         movies.sort(key=lambda x: order[x['id']])
 
