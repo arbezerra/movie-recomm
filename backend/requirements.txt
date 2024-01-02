@@ -1,11 +1,13 @@
 bcrypt
 Flask
 Flask-cors
+pandas
 pika
 psycopg2
 pyjwt
 pytest
 python-dotenv
 requests
+scikit-learn
 uwsgi
 

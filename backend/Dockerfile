@@ -18,7 +18,7 @@ RUN pip install -r requirements.txt
 
 FROM python:3.10-alpine as runner
 WORKDIR /app
-RUN apk add --no-cache pcre libpq
+RUN apk add --no-cache pcre libpq libgomp libstdc++
 
 COPY --from=builder /app /app
 COPY . .
