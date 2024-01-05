@@ -17,16 +17,27 @@
           <h2 class="card-title">{movie.title}</h2>
           <p>{movie.overview}</p>
           <div class="card-actions">
-            <form method="POST" use:enhance>
+            <form
+              method="POST"
+              use:enhance={() => {
+                return async ({ result }) => {
+                  if (result.type === 'redirect') {
+                    // redirect without invalidating
+                    await goto(result.location);
+                  }
+                };
+              }}
+            >
               <input name="id" type="hidden" value={movie.id} />
-              <div class="rating">
+              <div class="rating align-middle">
                 <input type="radio" name="stars" class="rating-hidden" checked />
-                <input type="radio" name="stars" class="mask mask-star" />
-                <input type="radio" name="stars" class="mask mask-star" />
-                <input type="radio" name="stars" class="mask mask-star" />
-                <input type="radio" name="stars" class="mask mask-star" />
-                <input type="radio" name="stars" class="mask mask-star" />
+                <input type="radio" name="stars" value="1" class="mask mask-star" />
+                <input type="radio" name="stars" value="2" class="mask mask-star" />
+                <input type="radio" name="stars" value="3" class="mask mask-star" />
+                <input type="radio" name="stars" value="4" class="mask mask-star" />
+                <input type="radio" name="stars" value="5" class="mask mask-star" />
               </div>
+              <button type="submit" class="btn btn-primary ms-4">Save</button>
             </form>
           </div>
         </div>
