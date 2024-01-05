@@ -1,12 +1,27 @@
 version: '3.8'
 
 services:
+  frontend:
+    build: ./frontend
+    ports:
+      - '5173:5173'
+    environment:
+      API_URL: http://backend:5000
+      ORIGIN: http://localhost:5173
+    depends_on:
+      - backend
   backend:
     build: ./backend
     ports:
       - '5000:5000'
-    env_file:
-      - ./backend/.env
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      TMDB_TOKEN: ${TMDB_TOKEN}
+      DB_HOST: db
+      DB_NAME: movie
+      DB_USER: movie
+      DB_PASS: secret
+      Q_HOST: rabbitmq
     depends_on:
       db:
         condition: service_healthy
@@ -14,8 +29,12 @@ services:
         condition: service_healthy
   worker:
     build: ./worker
-    env_file:
-      - ./worker/.env
+    environment:
+      DB_HOST: db
+      DB_NAME: movie
+      DB_USER: movie
+      DB_PASS: secret
+      Q_HOST: rabbitmq
     depends_on:
       db:
         condition: service_healthy

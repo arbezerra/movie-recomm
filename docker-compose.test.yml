@@ -6,8 +6,14 @@ services:
     command: ['pytest']
     ports:
       - '5000:5000'
-    env_file:
-      - ./backend/.env
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      TMDB_TOKEN: ${TMDB_TOKEN}
+      DB_HOST: db
+      DB_NAME: movie
+      DB_USER: movie
+      DB_PASS: secret
+      Q_HOST: rabbitmq
     depends_on:
       db:
         condition: service_healthy
@@ -15,8 +21,12 @@ services:
         condition: service_healthy
   worker:
     build: ./worker
-    env_file:
-      - ./worker/.env
+    environment:
+      DB_HOST: db
+      DB_NAME: movie
+      DB_USER: movie
+      DB_PASS: secret
+      Q_HOST: rabbitmq
     depends_on:
       db:
         condition: service_healthy
