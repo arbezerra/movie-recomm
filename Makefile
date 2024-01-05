@@ -12,3 +12,5 @@ logs:
 test:
 	docker compose -f docker-compose.test.yml up --build --exit-code-from test
 
+train:
+	docker compose -f docker-compose.train.yml run --build train

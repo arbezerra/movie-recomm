@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  train:
+    build: ./backend
+    entrypoint: ['python3', 'train.py']
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      TMDB_TOKEN: ${TMDB_TOKEN}
+      DB_HOST: db
+      DB_NAME: movie
+      DB_USER: movie
+      DB_PASS: secret
+      Q_HOST: rabbitmq
+
