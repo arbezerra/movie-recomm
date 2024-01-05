@@ -45,8 +45,12 @@
     {/each}
   </div>
   <div class="flex justify-center">
-    <button class="btn btn-primary" on:click={() => goto('/', { invalidateAll: true })}
-      >More Recommendations</button
+    <button
+      class="btn btn-primary"
+      on:click={() => {
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
+        location.reload();
+      }}>More Recommendations</button
     >
   </div>
 </main>
