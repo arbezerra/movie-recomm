@@ -21,6 +21,7 @@ class Recommender:
             right_on="movie_id",
             how="right"
         )
+        map = map.loc[~map['id'].isin(star_map['id'])]
 
         if star_map.shape[0] < self.SVC_MIN:
             return [dict(row) for row in self.service.paginate(1, 10)]
