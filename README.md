@@ -32,3 +32,13 @@ You can start the tests using
 ```bash
 make test
 ```
+
+## Evaluate
+
+You can evaluate the model by running:
+
+```bash
+make train
+```
+
+It uses the function cross_val_score to evaluate the model accuracy.
