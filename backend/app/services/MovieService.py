@@ -69,7 +69,7 @@ def paginate(page, limit):
             M.*, array_agg(DISTINCT G.genre_id) as genre
         FROM movie M JOIN movie_genre G ON G.movie_id=M.id
         GROUP BY M.id
-        ORDER BY M.popularity DESC
+        ORDER BY RANDOM()
         OFFSET %s LIMIT %s;""",
         ((page-1)*limit, limit)
     )

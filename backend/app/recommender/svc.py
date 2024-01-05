@@ -16,7 +16,6 @@ class SVC:
         model.fit(x, y)
 
         predicted = model.predict(map[["x", "y"]])
-        print(predicted)
         map["stars"] = predicted
         map = map.sort_values(by=['stars'], ascending=False)
 

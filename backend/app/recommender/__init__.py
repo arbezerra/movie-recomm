@@ -23,7 +23,7 @@ class Recommender:
         )
 
         if star_map.shape[0] < self.SVC_MIN:
-            return self.service.paginate(1, 10)
+            return [dict(row) for row in self.service.paginate(1, 10)]
 
         recommendations = self.svc.select(map, star_map)
 

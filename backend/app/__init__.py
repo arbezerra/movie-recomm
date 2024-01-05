@@ -3,6 +3,7 @@ from flask_cors import CORS
 from .recommender import Recommender
 from .services import MovieService
 from .routes import routes
+from .util import auth
 
 
 cors = CORS()
@@ -22,9 +23,13 @@ def create_app():
     def index():
         return {"status": "ok"}
 
-    @app.route('/recommend/<user_id>', methods=['GET'])
-    def recomm(user_id):
-        return jsonify({"movies": recommender.recommend(user_id)})
+    @app.route('/recommend', methods=['POST'])
+    def recomm():
+        bearer = request.headers.get('Authorization')
+        token = auth.verify(bearer)
+        if not token:
+            return {'message': 'Forbidden'}, 403
+        return jsonify({"movies": recommender.recommend(token['id'])})
 
     app.register_blueprint(routes)
 
