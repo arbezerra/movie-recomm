@@ -1,4 +1,5 @@
 from app import db
+import traceback
 
 
 def get_all():
@@ -39,6 +40,30 @@ def get_stared(user_id):
     cur.close()
 
     return map
+
+
+def star(movie_id, user_id, stars):
+    try:
+        conn = db.get()
+        cur = conn.cursor()
+
+        cur.execute("""
+            INSERT INTO
+                user_star_movie (movie_id, user_id, stars)
+            VALUES
+                (%s, %s, %s)
+            ON CONFLICT (movie_id, user_id)
+            DO
+                UPDATE SET
+                    stars=EXCLUDED.stars;
+            """, (movie_id, user_id, stars))
+        conn.commit()
+        cur.close()
+        return True
+    except Exception:
+        print(traceback.format_exc())
+
+    return False
 
 
 def get_by_ids(ids):
